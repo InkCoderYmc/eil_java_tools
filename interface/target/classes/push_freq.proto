@@ -1,0 +1,21 @@
+syntax = "proto3";
+package pushrecsys;
+option java_package = "com.bilibili.ai.push";
+option java_outer_classname = "FrequencyControl";
+
+message FrequencyInfo{
+  string user_id = 1;
+  uint64 last_update_time = 2;
+  repeated Item values = 3;
+}
+
+message Item{
+  uint64 avid = 1;
+  uint32 push_id = 2;
+  string push_type = 3;
+  uint64 push_time = 4;
+  string message_type = 5;
+  string trigger_type = 6;
+  string job_date = 7;
+}
+

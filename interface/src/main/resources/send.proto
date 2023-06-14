@@ -1,0 +1,197 @@
+syntax = "proto3";
+package pushrecsys;
+option java_package = "com.bilibili.ai.push";
+option java_outer_classname = "SendInfo";
+
+service Send {
+  rpc CreateJob(JobRequest) returns (JobResponse) {}
+  rpc DestroyJob(JobRequest) returns (JobResponse) {}
+  rpc QueryJob(JobRequest) returns (JobResponse) {}
+
+  rpc CreateTask(TaskRequest) returns (TaskResponse) {}
+  rpc CancelTask(TaskRequest) returns (TaskResponse) {}
+  rpc QueryTask(TaskRequest) returns (TaskResponse) {}
+  rpc FinishTaskToken(TaskRequest) returns (TaskResponse) {}
+
+  // batch rpc
+  rpc SendTaskToCache(BatchTaskRequest) returns (BatchTaskResponse) {}
+  rpc SendTaskToPlatform(BatchTaskRequest) returns (BatchTaskResponse) {}
+  rpc QueryBatchTask(BatchTaskRequest) returns (BatchTaskResponse) {}
+
+  rpc GetAVContent(AVContentRequest) returns (AVContentResponse) {}
+  rpc GetInteractContent(InteractContentRequest) returns (InteractContentResponse) {}
+}
+
+message Job {
+  int64 job_id = 1;
+  string date = 2;
+  string push_type = 3;
+  int32 push_id = 4;
+  string status = 5;
+  string conf_file = 6;
+}
+
+message Task {
+  int64 task_id = 1;
+  int64 job_id = 2;
+  string data = 3;
+  string status = 4;
+  string push_type = 5;
+  string job_date = 6;
+  int32 push_id = 7;
+}
+
+message JobRequest {
+  Job job = 1;
+}
+
+message JobResponse {
+  int32 code = 1;
+  string msg = 2;
+  Job job = 3;
+}
+
+message TaskRequest {
+  Task task = 1;
+}
+
+message TaskResponse {
+  int32 code = 1;
+  string msg = 2;
+  Task task = 3;
+}
+
+message BatchTaskRequest {
+  repeated Task tasks = 1;
+}
+
+message BatchTaskResponse {
+  int32 code = 1;
+  string msg = 2;
+  repeated Task tasks = 3;
+}
+
+message CalResult {
+  repeated AVCandidate av_candidates = 1;
+  repeated InteractCandidate interact_candidates = 2;
+  bool is_finish_token = 3;
+  int64 finished_task_id = 4;
+  int32 finished_push_id = 5;
+  int32 finished_timestamp = 6;
+  int64 finished_job_id = 8;
+  int64 task_id = 9;
+  int64 job_id = 10;
+  int32 push_id = 11;
+  string push_type = 12;
+  string job_date = 13;
+}
+
+message AVCandidate {
+  int64 avid = 1;
+  string trigger_type = 2;
+  string user_type = 3;
+  string red_point = 4;
+  repeated string userid_group = 5;
+  string reason_type = 6;
+  int32 push_id = 7;
+  // 文案模板id
+  string content_id = 8;
+  string extra_template_id = 9;
+}
+
+message AVContent {
+  AVCandidate candidate_record = 1;
+  int32 app_id = 2;
+  int32 link_type = 3;
+  int32 business_id = 4;
+  string group = 5;
+  string trigger_type = 6;
+  string link_value = 7;
+  string alert_title = 8;
+  int32 msg_cnt = 9;
+  string placeholders = 10;
+  string alert_body = 11;
+  int32 ai_follow = 12;
+  int32 template_id = 13;
+  string image_url = 14;
+  repeated string mids = 15;
+  string uuid = 16;
+  string data_body = 17;
+  repeated string buvids = 18;
+  string extra_template_id = 19;
+}
+
+message AVContentRequest {
+  repeated AVCandidate candidate_records = 1;
+  int64 task_id = 2;
+  int64 job_id = 3;
+  int32 push_id = 4;
+  string push_type = 5;
+  string job_date = 6;
+}
+
+message AVContentResponse {
+  repeated AVContent content_records = 1;
+  int64 task_id = 2;
+  int64 job_id = 3;
+  int32 push_id = 4;
+  string push_type = 5;
+  string job_date = 6;
+}
+
+message InteractCandidate {
+  string mid = 1;
+  string red_point = 2;
+  int32 push_id = 3;
+  string user_type = 4;
+  string interact_type = 5;
+}
+
+message InteractContentRequest {
+  repeated InteractCandidate candidate_records = 1;
+  int64 task_id = 2;
+  int64 job_id = 3;
+  int32 push_id = 4;
+  string push_type = 5;
+  string job_date = 6;
+}
+
+message InteractContent {
+  InteractCandidate candidate_record = 1;
+  string interact_type = 2;
+  int32 app_id = 3;
+  int32 business_id = 4;
+  int32 link_type = 5;
+  string link_value = 6;
+  repeated string mids = 7;
+  string uuid = 8;
+  string alert_title = 9;
+  string alert_body = 10;
+  int32 msg_cnt = 11;
+  string data_body = 12;
+}
+
+message InteractContentResponse {
+  repeated InteractContent content_records = 1;
+  int64 task_id = 2;
+  int64 job_id = 3;
+  int32 push_id = 4;
+  string push_type = 5;
+  string job_date = 6;
+}
+
+message SendPlatformDataCell {
+  repeated AVContent av_content_records = 1;
+  repeated InteractContent interact_content_records = 2;
+  bool is_send = 3;
+  bool is_finish_token = 4;
+  int64 finished_task_id = 5;
+  int32 finished_push_id = 6;
+  int32 finished_timestamp = 7;
+  int64 finished_job_id = 8;
+  int64 task_id = 9;
+  int64 job_id = 10;
+  int32 push_id = 11;
+  string push_type = 12;
+  string job_date = 13;
+}
