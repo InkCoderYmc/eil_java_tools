@@ -1,4 +1,1 @@
-# push-send-stream
-
-push流式发送 flink-jar
-
+# eil java 脚手架
